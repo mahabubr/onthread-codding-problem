@@ -1,4 +1,3 @@
-import { orderSearchFields } from "../constants/order.constants";
 import { TOrders } from "../interface/order.types";
 import { Orders } from "../model/order.schema";
 
@@ -7,21 +6,9 @@ const createOrder = async (payload: TOrders) => {
   return result;
 };
 
-const getAllOrders = async (filters: { searchTerm?: string }) => {
-  const { searchTerm, ...filtersData } = filters;
-
+const getAllOrders = async (filters: { search?: string }) => {
+  const { ...filtersData } = filters;
   const andConditions = [];
-
-  if (searchTerm) {
-    andConditions.push({
-      $or: orderSearchFields.map((field) => ({
-        [field]: {
-          $regex: searchTerm,
-          $options: "i",
-        },
-      })),
-    });
-  }
 
   if (Object.keys(filtersData).length) {
     andConditions.push({
