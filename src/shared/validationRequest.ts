@@ -14,8 +14,16 @@ const validateRequest =
       });
 
       return next();
-    } catch (error) {
-      next(error);
+    } catch (error: any) {
+      const errorDetails = JSON.parse(error.message);
+      const formattedErrors = errorDetails.map((err: any) => ({
+        field: err.path.join("."),
+        message: err.message,
+      }));
+
+      res
+        .status(400)
+        .json({ error: "Validation failed", details: formattedErrors });
     }
   };
 
